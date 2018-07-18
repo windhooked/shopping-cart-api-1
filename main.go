@@ -12,9 +12,9 @@ import (
     "github.com/go-ozzo/ozzo-routing/cors"
     // _ "github.com/lib/pq"
     // "github.com/qiangxue/golang-restful-starter-kit/apis"
-    "github.com/qiangxue/golang-restful-starter-kit/app"
+    "github.com/vilst3r/golang-shopping-cart-REST-API-example/app"
     // "github.com/qiangxue/golang-restful-starter-kit/daos"
-    // "github.com/qiangxue/golang-restful-starter-kit/errors"
+    "github.com/vilst3r/golang-shopping-cart-REST-API-example/errors"
     // "github.com/qiangxue/golang-restful-starter-kit/services"
 )
 
