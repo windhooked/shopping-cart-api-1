@@ -7,14 +7,16 @@ import (
     "github.com/Sirupsen/logrus"
     "github.com/go-ozzo/ozzo-dbx"
     "github.com/go-ozzo/ozzo-routing"
-    "github.com/go-ozzo/ozzo-routing/auth"
+    // "github.com/go-ozzo/ozzo-routing/auth"
     "github.com/go-ozzo/ozzo-routing/content"
     "github.com/go-ozzo/ozzo-routing/cors"
-    // _ "github.com/lib/pq"
+    _ "github.com/lib/pq"
     // "github.com/qiangxue/golang-restful-starter-kit/apis"
-    "github.com/vilst3r/golang-shopping-cart-REST-API-example/app"
+    // "github.com/vilst3r/golang-shopping-cart-REST-API-example/app"
+    "./app"
     // "github.com/qiangxue/golang-restful-starter-kit/daos"
-    "github.com/vilst3r/golang-shopping-cart-REST-API-example/errors"
+    // "github.com/vilst3r/golang-shopping-cart-REST-API-example/errors"
+    "./errors"
     // "github.com/qiangxue/golang-restful-starter-kit/services"
 )
 
@@ -67,16 +69,16 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
         app.Transactional(db),
     )
 
-    rg := router.Group("/v1")
+    // rg := router.Group("/v1")
 
-    rg.Post("/auth", apis.Auth(app.Config.JWTSigningKey))
-    rg.Use(auth.JWT(app.Config.JWTVerificationKey, auth.JWTOptions{
-        SigningMethod: app.Config.JWTSigningMethod,
-        TokenHandler:  apis.JWTHandler,
-    }))
+    // rg.Post("/auth", apis.Auth(app.Config.JWTSigningKey))
+    // rg.Use(auth.JWT(app.Config.JWTVerificationKey, auth.JWTOptions{
+    //     SigningMethod: app.Config.JWTSigningMethod,
+    //     TokenHandler:  apis.JWTHandler,
+    // }))
 
-    artistDAO := daos.NewArtistDAO()
-    apis.ServeArtistResource(rg, services.NewArtistService(artistDAO))
+    // artistDAO := daos.NewArtistDAO()
+    // apis.ServeArtistResource(rg, services.NewArtistService(artistDAO))
 
     // wire up more resource APIs here
 

@@ -20,16 +20,17 @@ type appConfig struct {
 	// the signing method for JWT. Defaults to "HS256"
 	JWTSigningMethod   string `mapstructure:"jwt_signing_method"`
 	// JWT signing key. required.
-	JWTSigningKey      string `mapstructure:"jwt_signing_key"`
+	// JWTSigningKey      string `mapstructure:"jwt_signing_key"`
 	// JWT verification key. required.
-	JWTVerificationKey string `mapstructure:"jwt_verification_key"`
+	// JWTVerificationKey string `mapstructure:"jwt_verification_key"`
 }
 
 func (config appConfig) Validate() error {
 	return validation.ValidateStruct(&config,
 		validation.Field(&config.DSN, validation.Required),
-		validation.Field(&config.JWTSigningKey, validation.Required),
-		validation.Field(&config.JWTVerificationKey, validation.Required),
+		// validation.Field(&config.DSN, validation.Required),
+		// validation.Field(&config.JWTSigningKey, validation.Required),
+		// validation.Field(&config.JWTVerificationKey, validation.Required),
 	)
 }
 
@@ -44,7 +45,7 @@ func LoadConfig(configPaths ...string) error {
 	v.AutomaticEnv()
 	v.SetDefault("error_file", "config/errors.yaml")
 	v.SetDefault("server_port", 8080)
-	v.SetDefault("jwt_signing_method", "HS256")
+	// v.SetDefault("jwt_signing_method", "HS256")
 	for _, path := range configPaths {
 		v.AddConfigPath(path)
 	}
