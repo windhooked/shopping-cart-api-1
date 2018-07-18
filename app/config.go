@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+
 	"github.com/spf13/viper"
 	"github.com/go-ozzo/ozzo-validation"
 )

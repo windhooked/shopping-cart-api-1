@@ -1,0 +1,19 @@
+System Design Notes for GoLang Shopping REST API
+
+To hypothetically scale this system to a million users and such, need to:
+	# Database Optimisation
+	- make all database queries from the backend write or read from a single atomic table
+		- reason for this is to reduce the load on the database in cases of a million users, handling database server load is crucial
+			- if the database server shuts down due to complicated database queries and procedures on it, then your whole system is unavailable or laggy
+		- focus more complex business logic on the backend server than the database server in which concurrency operations are beneficial for (esp a GoLang backend server)
+	- avoid any join operations in the database procedures, joins are expensive
+	- always index frequently used search fields/columns for every table to speed up querying
+		- creating an index is basically a on-disk hash table or an on-disk search tree that will dramatically improve lookup times
+	- use 'explain analyse' to help choose a suitable index to optimise lookup times
+
+	# Hardware Optimisation
+	- Upgrading a server's RAM and space will improve the space and time load that it can handle
+	- Adding multiple machines and using them as a distributed system for the backend greatly improves the availability of the entire system by balancing loads through idle processes/machines
+
+
+

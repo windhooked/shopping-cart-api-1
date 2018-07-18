@@ -1,38 +1,84 @@
 package main
 
 import (
-    "encoding/json"
-    // "os"
-    // "fmt"
-    "log"
+    "fmt"
     "net/http"
-    "github.com/gorilla/mux"
-    // "github.com/vilst3r/golang-boilerplate/config"
+
+    "github.com/Sirupsen/logrus"
+    "github.com/go-ozzo/ozzo-dbx"
+    "github.com/go-ozzo/ozzo-routing"
+    "github.com/go-ozzo/ozzo-routing/auth"
+    "github.com/go-ozzo/ozzo-routing/content"
+    "github.com/go-ozzo/ozzo-routing/cors"
+    // _ "github.com/lib/pq"
+    // "github.com/qiangxue/golang-restful-starter-kit/apis"
+    "github.com/qiangxue/golang-restful-starter-kit/app"
+    // "github.com/qiangxue/golang-restful-starter-kit/daos"
+    // "github.com/qiangxue/golang-restful-starter-kit/errors"
+    // "github.com/qiangxue/golang-restful-starter-kit/services"
 )
 
-type Person struct {
-	ID string `json:"id, omitempty"`
-    Firstname string   `json:"firstname,omitempty"`
-    Lastname  string   `json:"lastname,omitempty"`
-    // Address   *Address `json:"address,omitempty"`	
-}
-
-func GetPeople(w http.ResponseWriter, r *http.Request) {
-	var people []Person
-	people = append(people, Person{ID: "1", Firstname: "John", Lastname: "Doe"})
-	people = append(people, Person{ID: "2", Firstname: "Koko", Lastname: "Doe"})
-	people = append(people, Person{ID: "3", Firstname: "Francis", Lastname: "Sunday"})		
-	json.NewEncoder(w).Encode(people)
-}
-
-// our main function
 func main() {
-	// load application configurations
-	// if err := app.LoadConfig("./app/config"); err != nil {
-	// 	panic(fmt.Errorf("Invalid application configuration: %s", err))
-	// }
+    // load application configurations
+    if err := app.LoadConfig("./config"); err != nil {
+        panic(fmt.Errorf("Invalid application configuration: %s", err))
+    }
 
-    router := mux.NewRouter()
-    router.HandleFunc("/people", GetPeople).Methods("GET")
-    log.Fatal(http.ListenAndServe(":8000", router))
+    // load error messages
+    if err := errors.LoadMessages(app.Config.ErrorFile); err != nil {
+        panic(fmt.Errorf("Failed to read the error message file: %s", err))
+    }
+
+    // create the logger
+    logger := logrus.New()
+
+    // connect to the database
+    db, err := dbx.MustOpen("postgres", app.Config.DSN)
+    if err != nil {
+        panic(err)
+    }
+    db.LogFunc = logger.Infof
+
+    // wire up API routing
+    http.Handle("/", buildRouter(logger, db))
+
+    // start the server
+    address := fmt.Sprintf(":%v", app.Config.ServerPort)
+    logger.Infof("server %v is started at %v\n", app.Version, address)
+    panic(http.ListenAndServe(address, nil))
+}
+
+func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
+    router := routing.New()
+
+    router.To("GET,HEAD", "/ping", func(c *routing.Context) error {
+        c.Abort()  // skip all other middlewares/handlers
+        return c.Write("OK " + app.Version)
+    })
+
+    router.Use(
+        app.Init(logger),
+        content.TypeNegotiator(content.JSON),
+        cors.Handler(cors.Options{
+            AllowOrigins: "*",
+            AllowHeaders: "*",
+            AllowMethods: "*",
+        }),
+        app.Transactional(db),
+    )
+
+    rg := router.Group("/v1")
+
+    rg.Post("/auth", apis.Auth(app.Config.JWTSigningKey))
+    rg.Use(auth.JWT(app.Config.JWTVerificationKey, auth.JWTOptions{
+        SigningMethod: app.Config.JWTSigningMethod,
+        TokenHandler:  apis.JWTHandler,
+    }))
+
+    artistDAO := daos.NewArtistDAO()
+    apis.ServeArtistResource(rg, services.NewArtistService(artistDAO))
+
+    // wire up more resource APIs here
+
+    return router
 }
