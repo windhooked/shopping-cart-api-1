@@ -58,6 +58,13 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
         return c.Write("OK " + app.Version)
     })
 
+    // Run my sql schema script
+    router.To("GET,HEAD", "/buildDB", func(c *routing.Context) error {
+        c.Abort()  // skip all other middlewares/handlers
+        print("TEST")
+        return c.Write("OK " + app.Version + " - database created in DB endpoint instance on AWS")
+    })
+
     router.Use(
         app.Init(logger),
         content.TypeNegotiator(content.JSON),
