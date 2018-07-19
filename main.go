@@ -11,13 +11,13 @@ import (
     "github.com/go-ozzo/ozzo-routing/content"
     "github.com/go-ozzo/ozzo-routing/cors"
     _ "github.com/lib/pq"
-    // "github.com/qiangxue/golang-restful-starter-kit/apis"
+    _ "./controllers"
     // "github.com/vilst3r/golang-shopping-cart-REST-API-example/app"
     "./app"
-    // "github.com/qiangxue/golang-restful-starter-kit/daos"
+    "./daos"
     // "github.com/vilst3r/golang-shopping-cart-REST-API-example/errors"
     "./errors"
-    // "github.com/qiangxue/golang-restful-starter-kit/services"
+    "./services"
 )
 
 func main() {
@@ -58,13 +58,6 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
         return c.Write("OK " + app.Version)
     })
 
-    // Run my sql schema script
-    router.To("GET,HEAD", "/buildDB", func(c *routing.Context) error {
-        c.Abort()  // skip all other middlewares/handlers
-        print("TEST")
-        return c.Write("OK " + app.Version + " - database created in DB endpoint instance on AWS")
-    })
-
     router.Use(
         app.Init(logger),
         content.TypeNegotiator(content.JSON),
@@ -76,7 +69,11 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
         app.Transactional(db),
     )
 
-    // rg := router.Group("/v1")
+
+    // Load all our services to this route
+    items := router.Group("/items")
+    itemDAO := daos.newItemDAO()
+
 
     // rg.Post("/auth", apis.Auth(app.Config.JWTSigningKey))
     // rg.Use(auth.JWT(app.Config.JWTVerificationKey, auth.JWTOptions{
