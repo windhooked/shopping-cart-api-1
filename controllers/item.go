@@ -1,5 +1,56 @@
 package controllers
 
-func test() {
+import (
+	_ "strconv"
+
+	"github.com/go-ozzo/ozzo-routing"
+	"../app"
+	"../models"
+)
+
+type (
+	// itemService specifies the interface for the artist service needed by artistResource.
+	itemService interface {
+		Get(rs app.RequestScope, id int) (*models.Item, error)
+		Query(rs app.RequestScope, offset, limit int) ([]models.Item, error)
+		Count(rs app.RequestScope) (int, error)
+		Create(rs app.RequestScope, model *models.Item) (*models.Item, error)
+		Update(rs app.RequestScope, id int, model *models.Item) (*models.Item, error)
+		Delete(rs app.RequestScope, id int) (*models.Item, error)
+	}
+
+	// itemResource defines the handlers for the CRUD APIs.
+	itemResource struct {
+		service itemService
+	}
+)
+
+func ServeItemResource(rg *routing.RouteGroup, service itemService) {
+	r := &itemResource{service}
+	rg.Get("/items/<id>", r.get)
+	rg.Get("/items", r.query)
+	rg.Post("/items", r.create)
+	rg.Put("/items/<id>", r.update)
+	rg.Delete("/items/<id>", r.delete)
+}
+
+func (r *itemResource) get(c *routing.Context) error {
 	return
 }
+
+func query(){
+
+}
+
+func create(){
+
+}
+
+func update(){
+
+}
+
+func delete(){
+
+}
+

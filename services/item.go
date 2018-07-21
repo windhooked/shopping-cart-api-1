@@ -44,7 +44,7 @@ func (s *ItemService) Create(rs app.RequestScope, model *models.Item) (*models.I
 	if err := s.dao.Create(rs, model); err != nil {
 		return nil, err
 	}
-	return s.dao.Get(rs, model.item_id)
+	return s.dao.Get(rs, model.Item_id)
 }
 
 // Update updates the item with the specified ID.

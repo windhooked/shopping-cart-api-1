@@ -11,7 +11,7 @@ import (
     "github.com/go-ozzo/ozzo-routing/content"
     "github.com/go-ozzo/ozzo-routing/cors"
     _ "github.com/lib/pq"
-    _ "./controllers"
+    "./controllers"
     // "github.com/vilst3r/golang-shopping-cart-REST-API-example/app"
     "./app"
     "./daos"
@@ -72,7 +72,9 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
 
     // Load all our services to this route
     items := router.Group("/items")
-    itemDAO := daos.newItemDAO()
+    itemDAO := daos.NewItemDAO()
+    controllers.ServeItemResource(items, services.NewItemService(itemDAO))
+
 
 
     // rg.Post("/auth", apis.Auth(app.Config.JWTSigningKey))
