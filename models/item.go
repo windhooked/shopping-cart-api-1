@@ -4,9 +4,11 @@ package models
 import "github.com/go-ozzo/ozzo-validation"
 
 // Item represents an item record in DB
+// Id   int    `json:"id" db:"id"`
+// Name string `json:"name" db:"name"`
 type Item struct {
-	Item_id int
-	Promo_id int
+	Item_id int `db:"pk"`
+	Promo_id *int
 	Name string
 	Stock int
 	Price int

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	_ "strconv"
+	"strconv"
 
 	"github.com/go-ozzo/ozzo-routing"
 	"../app"
@@ -28,29 +28,39 @@ type (
 func ServeItemResource(rg *routing.RouteGroup, service itemService) {
 	r := &itemResource{service}
 	rg.Get("/items/<id>", r.get)
-	rg.Get("/items", r.query)
-	rg.Post("/items", r.create)
-	rg.Put("/items/<id>", r.update)
-	rg.Delete("/items/<id>", r.delete)
+	// rg.Get("/items", r.query)
+	// rg.Post("/items", r.create)
+	// rg.Put("/items/<id>", r.update)
+	// rg.Delete("/items/<id>", r.delete)
 }
 
 func (r *itemResource) get(c *routing.Context) error {
-	return
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	response, err := r.service.Get(app.GetRequestScope(c), id)
+	if err != nil {
+		return err
+	}
+
+	return c.Write(response)
 }
 
-func query(){
+// func (r *itemResource) query(c *routing.Context) error {
+// 	return
+// }
 
-}
+// func (r *itemResource) create(c *routing.Context) error {
+// 	return
+// }
 
-func create(){
+// func (r *itemResource) update(c *routing.Context) error {
+// 	return
+// }
 
-}
-
-func update(){
-
-}
-
-func delete(){
-
-}
+// func (r *itemResource) delete(c *routing.Context) error {
+// 	return
+// }
 

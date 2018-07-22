@@ -18,7 +18,7 @@ func TestItem(t *testing.T) {
 	// nameRequiredError := `{"error_code":"INVALID_DATA","message":"INVALID_DATA","details":[{"field":"name","error":"cannot be blank"}]}`
 
 	runAPITests(t, router, []apiTestCase{
-		{"t1 - get an item", "GET", "/items/1", "", http.StatusOK, `{"id":2,"name":"Accept"}`},
+		{"t1 - get an item", "GET", "/items/1", "", http.StatusOK, `{"Item_id":1, "Promo_id":2, "Name":"Belts", "Stock":10, "Price":20}`},
 		// {"t2 - get a nonexisting artist", "GET", "/artists/99999", "", http.StatusNotFound, notFoundError},
 		// {"t3 - create an artist", "POST", "/artists", `{"name":"Qiang"}`, http.StatusOK, `{"id": 276, "name":"Qiang"}`},
 		// {"t4 - create an artist with validation error", "POST", "/artists", `{"name":""}`, http.StatusBadRequest, nameRequiredError},

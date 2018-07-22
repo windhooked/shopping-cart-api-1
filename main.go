@@ -71,7 +71,7 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
 
 
     // Load all our services to this route
-    items := router.Group("/items")
+    items := router.Group("/api")
     itemDAO := daos.NewItemDAO()
     controllers.ServeItemResource(items, services.NewItemService(itemDAO))
 

@@ -27,10 +27,10 @@ CREATE TABLE Item
 CREATE TABLE Promotion
 (
     promo_id SERIAL PRIMARY KEY,
-    discounted_item_id INTEGER NOT NULL,
+    -- discounted_item_id INTEGER NOT NULL,
     required_no_of_items INTEGER NOT NULL,
-    discounted_price INTEGER NOT NULL
-    -- discount_percentage INTEGER NOT NULL CHECK (discount_percentage >= 0 AND discount_percentage <= 100),
+    -- discounted_price INTEGER NOT NULL
+    discount_percentage INTEGER NOT NULL CHECK (discount_percentage >= 0 AND discount_percentage <= 100)
 );
 -- Promotions should be applied when the customer views their cart
 -- Need to join Promotion and Item to apply promotions
@@ -47,17 +47,25 @@ CREATE TABLE "Order"
 
 -- Adding foreign keys after table generation
 ALTER TABLE Item ADD FOREIGN KEY (promo_id) REFERENCES Promotion (promo_id) ON DELETE CASCADE;
-ALTER TABLE Promotion ADD FOREIGN KEY (discounted_item_id) REFERENCES Item (item_id) ON DELETE CASCADE;
+-- ALTER TABLE Promotion ADD FOREIGN KEY (discounted_item_id) REFERENCES Item (item_id) ON DELETE CASCADE;
 ALTER TABLE "Order" ADD FOREIGN KEY (cust_id) REFERENCES Customer (cust_id) ON DELETE CASCADE;
 ALTER TABLE "Order" ADD FOREIGN KEY (item_id) REFERENCES Item (item_id) ON DELETE CASCADE;
 
 -- Adding test data
+INSERT INTO Promotion (required_no_of_items, discount_percentage) VALUES (2, 15);
+INSERT INTO Promotion (required_no_of_items, discount_percentage) VALUES (2, 25);
+INSERT INTO Promotion (required_no_of_items, discount_percentage) VALUES (3, 50);
+
 INSERT INTO Item (name, stock, price) VALUES ('Belts', 10, 20);
 INSERT INTO Item (name, stock, price) VALUES ('Shirts', 5, 60);
 INSERT INTO Item (name, stock, price) VALUES ('Suits', 2, 300);
 INSERT INTO Item (name, stock, price) VALUES ('Trousers', 4, 70);
 INSERT INTO Item (name, stock, price) VALUES ('Shoes', 1, 120);
 INSERT INTO Item (name, stock, price) VALUES ('Ties', 8, 20);
+
+INSERT INTO Customer (first_name, last_name, post_address) VALUES ('John', 'Doe', 'Ryde, NSW');
+INSERT INTO Customer (first_name, last_name, post_address) VALUES ('Bob', 'Williams', 'Liverpool, NSW');
+
 
 
 -- Adding Index
