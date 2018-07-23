@@ -71,12 +71,13 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
 
 
     // Load all our services to this route
-    items := router.Group("/api")
+    api := router.Group("/api")
     itemDAO := daos.NewItemDAO()
-    controllers.ServeItemResource(items, services.NewItemService(itemDAO))
+    controllers.ServeItemResource(api, services.NewItemService(itemDAO))
     customerDAO := daos.NewCustomerDAO()
-    controllers.ServeCustomerResource(items, services.NewCustomerService(customerDAO))
-
+    controllers.ServeCustomerResource(api, services.NewCustomerService(customerDAO))
+    orderDAO := daos.NewOrderDAO()
+    controllers.ServeOrderResource(api, services.NewOrderService(orderDAO))
 
 
     // rg.Post("/auth", apis.Auth(app.Config.JWTSigningKey))
