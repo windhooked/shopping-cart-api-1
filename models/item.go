@@ -7,11 +7,11 @@ import "github.com/go-ozzo/ozzo-validation"
 // Id   int    `json:"id" db:"id"`
 // Name string `json:"name" db:"name"`
 type Item struct {
-	Item_id int `db:"pk"`
-	Promo_id *int
-	Name string
-	Stock int
-	Price int
+	Item_id int `json:"item_id" db:"pk"`
+	Promo_id *int `json:"promo_id"`
+	Name string `json:"name"`
+	Stock int `json:"stock"`
+	Price int `json:"price"`
 }
 
  // Validate validates the Item fields.

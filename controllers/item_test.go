@@ -14,19 +14,18 @@ func TestItem(t *testing.T) {
 	router := newRouter()
 	ServeItemResource(&router.RouteGroup, services.NewItemService(daos.NewItemDAO()))
 
-	// notFoundError := `{"error_code":"NOT_FOUND", "message":"NOT_FOUND"}`
-	// nameRequiredError := `{"error_code":"INVALID_DATA","message":"INVALID_DATA","details":[{"field":"name","error":"cannot be blank"}]}`
+	notFoundError := `{"error_code":"NOT_FOUND", "message":"NOT_FOUND"}`
+	nameRequiredError := `{"error_code":"INVALID_DATA","message":"INVALID_DATA","details":[{"field":"name","error":"cannot be blank"}]}`
 
 	runAPITests(t, router, []apiTestCase{
-		{"t1 - get an item", "GET", "/items/1", "", http.StatusOK, `{"Item_id":1, "Promo_id":2, "Name":"Belts", "Stock":10, "Price":20}`},
-		// {"t2 - get a nonexisting artist", "GET", "/artists/99999", "", http.StatusNotFound, notFoundError},
-		// {"t3 - create an artist", "POST", "/artists", `{"name":"Qiang"}`, http.StatusOK, `{"id": 276, "name":"Qiang"}`},
-		// {"t4 - create an artist with validation error", "POST", "/artists", `{"name":""}`, http.StatusBadRequest, nameRequiredError},
-		// {"t5 - update an artist", "PUT", "/artists/2", `{"name":"Qiang"}`, http.StatusOK, `{"id": 2, "name":"Qiang"}`},
-		// {"t6 - update an artist with validation error", "PUT", "/artists/2", `{"name":""}`, http.StatusBadRequest, nameRequiredError},
-		// {"t7 - update a nonexisting artist", "PUT", "/artists/99999", "{}", http.StatusNotFound, notFoundError},
-		// {"t8 - delete an artist", "DELETE", "/artists/2", ``, http.StatusOK, `{"id": 2, "name":"Qiang"}`},
-		// {"t9 - delete a nonexisting artist", "DELETE", "/artists/99999", "", http.StatusNotFound, notFoundError},
-		// {"t10 - get a list of artists", "GET", "/artists?page=3&per_page=2", "", http.StatusOK, `{"page":3,"per_page":2,"page_count":138,"total_count":275,"items":[{"id":6,"name":"Antônio Carlos Jobim"},{"id":7,"name":"Apocalyptica"}]}`},
+		{"t1 - get an item", "GET", "/items/1", "", http.StatusOK, `{"item_id":1, "promo_id":1, "name":"Belts", "stock":10, "price":20}`},
+		{"t2 - get a nonexisting item", "GET", "/items/99999", "", http.StatusNotFound, notFoundError},
+		{"t3 - create an item", "POST", "/items", `{"promo_id": 1, "name":"Hoodie", "stock": 1, "price": 10}`, http.StatusOK, `{"item_id": 7, "promo_id": 1, "name":"Hoodie", "stock": 1, "price": 10}`},
+		{"t4 - create an item with validation error", "POST", "/items", `{"name":""}`, http.StatusBadRequest, nameRequiredError},
+		{"t5 - update an item", "PUT", "/items/7", `{"stock": 2}`, http.StatusOK, `{"item_id":7, "promo_id":1, "name":"Hoodie", "stock":2, "price":10}`},
+		{"t6 - update an item with validation error", "PUT", "/items/2", `{"name":""}`, http.StatusBadRequest, nameRequiredError},
+		{"t7 - update a nonexisting item", "PUT", "/items/99999", "{}", http.StatusNotFound, notFoundError},
+		{"t8 - delete an item", "DELETE", "/items/7", ``, http.StatusOK, `{"item_id":7, "promo_id":1, "name":"Hoodie", "stock":2, "price":10}`},
+		{"t9 - delete a nonexisting item", "DELETE", "/items/99999", "", http.StatusNotFound, notFoundError},
 	})
 }

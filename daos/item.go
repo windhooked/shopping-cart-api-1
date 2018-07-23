@@ -54,7 +54,7 @@ func (dao *ItemDAO) Count(rs app.RequestScope) (int, error) {
 // Query retrieves the item records with the specified offset and limit from the database.
 func (dao *ItemDAO) Query(rs app.RequestScope, offset, limit int) ([]models.Item, error) {
 	item := []models.Item{}
-	err := rs.Tx().Select().OrderBy("id").Offset(int64(offset)).Limit(int64(limit)).All(&item)
+	err := rs.Tx().Select().OrderBy("item_id").Offset(int64(offset)).Limit(int64(limit)).All(&item)
 	return item, err
 }
 

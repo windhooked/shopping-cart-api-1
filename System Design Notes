@@ -14,6 +14,3 @@ To hypothetically scale this system to a million users and such, need to:
 	# Hardware Optimisation
 	- Upgrading a server's RAM and space will improve the space and time load that it can handle
 	- Adding multiple machines and using them as a distributed system for the backend greatly improves the availability of the entire system by balancing loads through idle processes/machines
-
-
-
