@@ -59,10 +59,17 @@ func (dao *OrderDAO) Query(rs app.RequestScope, offset, limit int) ([]models.Pur
 	return order, err
 }
 
-// Get reads the order with the specified ID from the database.
+// Get reads all orders with the specified cust_ID from the database.
 func (dao *OrderDAO) GetCustomerCart(rs app.RequestScope, id int) ([]models.Purchase_Order, error) {
 	order := []models.Purchase_Order{}
 	err := rs.Tx().Select().Where(dbx.HashExp{"cust_id": id, "dispatched": false}).All(&order)
+	return order, err
+}
+
+// Get reads all orders with the specified cust_ID from the database that are dispatched or purchased.
+func (dao *OrderDAO) GetCustomerCompletedOrders(rs app.RequestScope, id int) ([]models.Purchase_Order, error) {
+	order := []models.Purchase_Order{}
+	err := rs.Tx().Select().Where(dbx.HashExp{"cust_id": id, "dispatched": true}).All(&order)
 	return order, err
 }
 

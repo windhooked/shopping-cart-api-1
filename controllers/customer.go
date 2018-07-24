@@ -19,6 +19,7 @@ type (
 		Delete(rs app.RequestScope, id int) (*models.Customer, error)
 		
 		GetCart(rs app.RequestScope, id int) ([]models.Purchase_Order, error)
+		GetOrderTransactions(rs app.RequestScope, id int) ([]models.Purchase_Order, error)
 	}
 
 	// customerResource defines the handlers for the CRUD APIs.
@@ -36,6 +37,7 @@ func ServeCustomerResource(rg *routing.RouteGroup, service customerService) {
 	rg.Delete("/customers/<id>", r.delete)
 
 	rg.Get("/customers/<id>/cart", r.getCart)
+	rg.Get("/customers/<id>/transactions", r.getOrderTransactions)
 }
 
 func (r *customerResource) get(c *routing.Context) error {
@@ -132,3 +134,15 @@ func (r *customerResource) getCart(c * routing.Context) error {
 	return c.Write(response)
 }
 
+func (r *customerResource) getOrderTransactions(c * routing.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	response, err := r.service.GetOrderTransactions(app.GetRequestScope(c), id)
+	if err != nil {
+		return err
+	}
+
+	return c.Write(response)
+}

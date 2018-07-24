@@ -78,9 +78,7 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
     orderDAO := daos.NewOrderDAO()
     promotionDAO := daos.NewPromotionDAO()   
     
-    // main controller
     controllers.ServeCustomerResource(api, services.NewCustomerService(customerDAO, itemDAO, orderDAO, promotionDAO))
-    // dumb controllers
     controllers.ServePromotionResource(api, services.NewPromotionService(promotionDAO))
     controllers.ServeOrderResource(api, services.NewOrderService(orderDAO))
     controllers.ServeItemResource(api, services.NewItemService(itemDAO))

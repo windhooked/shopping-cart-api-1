@@ -26,6 +26,8 @@ type customerDAO interface {
 type customerOrderDAO interface {
 	// Get returns the order with the specified customer ID.
 	GetCustomerCart(rs app.RequestScope, id int) ([]models.Purchase_Order, error)
+
+	GetCustomerCompletedOrders(rs app.RequestScope, id int) ([]models.Purchase_Order, error)
 }
 
 // // promotionDAO specifies the interface of the promotion DAO needed by PromotionService.
@@ -107,6 +109,15 @@ func (s *CustomerService) Query(rs app.RequestScope, offset, limit int) ([]model
 // Returns the current shopping cart for the customer with the specified cust ID
 func (s *CustomerService) GetCart(rs app.RequestScope, id int) ([]models.Purchase_Order, error) {
 	orders, err := s.order_dao.GetCustomerCart(rs, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return orders, err
+}
+
+func (s *CustomerService) GetOrderTransactions(rs app.RequestScope, id int) ([]models.Purchase_Order, error) {
+	orders, err := s.order_dao.GetCustomerCompletedOrders(rs, id)
 	if err != nil {
 		return nil, err
 	}
