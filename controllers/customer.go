@@ -12,6 +12,7 @@ type (
 	// customerService specifies the interface for the customer service needed by customerResource.
 	customerService interface {
 		Get(rs app.RequestScope, id int) (*models.Customer, error)
+		GetCart(rs app.RequestScope, id int) (string, error)
 		Query(rs app.RequestScope, offset, limit int) ([]models.Customer, error)
 		Count(rs app.RequestScope) (int, error)
 		Create(rs app.RequestScope, model *models.Customer) (*models.Customer, error)
@@ -28,6 +29,7 @@ type (
 func ServeCustomerResource(rg *routing.RouteGroup, service customerService) {
 	r := &customerResource{service}
 	rg.Get("/customers/<id>", r.get)
+	rg.Get("/customers/<id>/cart", r.getCart)
 	rg.Get("/customers", r.query)
 	rg.Post("/customers", r.create)
 	rg.Put("/customers/<id>", r.update)
@@ -41,6 +43,20 @@ func (r *customerResource) get(c *routing.Context) error {
 	}
 
 	response, err := r.service.Get(app.GetRequestScope(c), id)
+	if err != nil {
+		return err
+	}
+
+	return c.Write(response)
+}
+
+func (r *customerResource) getCart(c * routing.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		print(id)
+		return err
+	}
+	response, err := r.service.GetCart(app.GetRequestScope(c), id)
 	if err != nil {
 		return err
 	}

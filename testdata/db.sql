@@ -10,8 +10,6 @@ CREATE TABLE Customer
     last_name VARCHAR(50) NOT NULL,
     post_address VARCHAR(50) NOT NULL
 );
--- How to fetch all items in a cart of a given user?
--- 
 
 CREATE TABLE Item
 (
@@ -21,8 +19,6 @@ CREATE TABLE Item
     stock INTEGER NOT NULL,
     price INTEGER NOT NULL
 );
--- Fetching all available items in the store
--- SELECT * FROM Item WHERE stock > 0
 
 CREATE TABLE Promotion
 (
@@ -40,7 +36,7 @@ CREATE TABLE Purchase_Order
     cust_id INTEGER NOT NULL,
     item_id INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
-    placed BOOLEAN NOT NULL DEFAULT FALSE
+    dispatched BOOLEAN NOT NULL DEFAULT FALSE
 );
 -- All cart items are from the PurchaseOrder table mapped to a customer id with his/her item
 -- SELECT * FROM PurchaseOrder WHERE customer.cust_id = PurchaseOrder.cust_id

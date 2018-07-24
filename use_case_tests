@@ -1,0 +1,17 @@
+User stories:
+Given a logged in customer with ID = 1
+
+1. Managing items in the cart
+	- Add new orders -> '/api/order'
+	- Delete current orders -> /'api/orders/:id'
+	- Update quantity of an order -> '/api/orders/:id' with body '{quantity: <new_quantity'}'
+
+2. View the current items in the cart
+	- Get all orders with customer = 1 and that are not dispatched -> '/api/orders'
+
+3. Check total price of items in the cart taking promotions into account
+	- Get all orders with customer = 1 and that are not dispatched
+	- Join tables with promotion to calculate the price '/api/orders'
+
+todo :
+- stuck on bug with order dao not recognising getByCustomerId....

@@ -5,5 +5,5 @@ type Purchase_Order struct {
 	Cust_id int `json:"cust_id"`
 	Item_id int `json:"item_id"`
 	Quantity int `json:"quantity"`
-	Placed bool `json:"placed"`
+	Dispatched bool `json:"dispatched"`
 }
