@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS Customer CASCADE;
 DROP TABLE IF EXISTS Item CASCADE;
 DROP TABLE IF EXISTS Promotion CASCADE;
-DROP TABLE IF EXISTS "Order" CASCADE;
+DROP TABLE IF EXISTS Purchase_Order CASCADE;
 
 CREATE TABLE Customer
 (
@@ -34,22 +34,22 @@ CREATE TABLE Promotion
 -- Promotions should be applied when the customer views their cart
 -- Need to join Promotion and Item to apply promotions
 
-CREATE TABLE "Order" 
+CREATE TABLE Purchase_Order 
 (
-    order_id SERIAL PRIMARY KEY,
+    purchase_order_id SERIAL PRIMARY KEY,
     cust_id INTEGER NOT NULL,
     item_id INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
     placed BOOLEAN NOT NULL DEFAULT FALSE
 );
--- All cart items are from the order table mapped to a customer id with his/her item
--- SELECT * FROM Order WHERE customer.cust_id = order.cust_id
+-- All cart items are from the PurchaseOrder table mapped to a customer id with his/her item
+-- SELECT * FROM PurchaseOrder WHERE customer.cust_id = PurchaseOrder.cust_id
 
 -- Adding foreign keys after table generation
 ALTER TABLE Item ADD FOREIGN KEY (promo_id) REFERENCES Promotion (promo_id) ON DELETE CASCADE;
 ALTER TABLE Promotion ADD FOREIGN KEY (required_item_id) REFERENCES Item (item_id) ON DELETE CASCADE;
-ALTER TABLE "Order" ADD FOREIGN KEY (cust_id) REFERENCES Customer (cust_id) ON DELETE CASCADE;
-ALTER TABLE "Order" ADD FOREIGN KEY (item_id) REFERENCES Item (item_id) ON DELETE CASCADE;
+ALTER TABLE Purchase_Order ADD FOREIGN KEY (cust_id) REFERENCES Customer (cust_id) ON DELETE CASCADE;
+ALTER TABLE Purchase_Order ADD FOREIGN KEY (item_id) REFERENCES Item (item_id) ON DELETE CASCADE;
 
 -- Adding test data
 INSERT INTO Item (name, stock, price) VALUES ('Belts', 10, 20);

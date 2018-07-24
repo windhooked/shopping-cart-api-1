@@ -11,12 +11,12 @@ import (
 type (
 	// orderService specifies the interface for the artist service needed by orderResource.
 	orderService interface {
-		Get(rs app.RequestScope, id int) (*models.Order, error)
-		Query(rs app.RequestScope, offset, limit int) ([]models.Order, error)
+		Get(rs app.RequestScope, id int) (*models.Purchase_Order, error)
+		Query(rs app.RequestScope, offset, limit int) ([]models.Purchase_Order, error)
 		Count(rs app.RequestScope) (int, error)
-		Create(rs app.RequestScope, model *models.Order) (*models.Order, error)
-		Update(rs app.RequestScope, id int, model *models.Order) (*models.Order, error)
-		Delete(rs app.RequestScope, id int) (*models.Order, error)
+		Create(rs app.RequestScope, model *models.Purchase_Order) (*models.Purchase_Order, error)
+		Update(rs app.RequestScope, id int, model *models.Purchase_Order) (*models.Purchase_Order, error)
+		Delete(rs app.RequestScope, id int) (*models.Purchase_Order, error)
 	}
 
 	// orderResource defines the handlers for the CRUD APIs.
@@ -64,7 +64,7 @@ func (r *orderResource) query(c *routing.Context) error {
 }
 
 func (r *orderResource) create(c *routing.Context) error {
-	var model models.Order
+	var model models.Purchase_Order
 	if err := c.Read(&model); err != nil {
 		return err
 	}

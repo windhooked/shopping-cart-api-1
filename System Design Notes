@@ -2,6 +2,7 @@ System Design Notes for GoLang Shopping REST API
 
 To hypothetically scale this system to a million users and such, need to:
 	# Database Optimisation
+	- denormalise our database, adding redundant fields that are commonly read in order to avoid joins and optimise read time
 	- make all database queries from the backend write or read from a single atomic table
 		- reason for this is to reduce the load on the database in cases of a million users, handling database server load is crucial
 			- if the database server shuts down due to complicated database queries and procedures on it, then your whole system is unavailable or laggy
