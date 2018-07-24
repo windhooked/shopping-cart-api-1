@@ -1,7 +1,7 @@
 package daos
 
 import (
-	// "github.com/go-ozzo/ozzo-dbx"
+	"github.com/go-ozzo/ozzo-dbx"
 	"../app"
 	"../models"
 )
@@ -17,14 +17,6 @@ func NewOrderDAO() *OrderDAO {
 func (dao *OrderDAO) Get(rs app.RequestScope, id int) (*models.Purchase_Order, error) {
 	var order models.Purchase_Order
 	err := rs.Tx().Select().Model(id, &order)
-	return &order, err
-}
-
-// Get reads the order with the specified ID from the database.
-func (dao *OrderDAO) GetByCustomerId(rs app.RequestScope, id int) (*models.Purchase_Order, error) {
-	var order models.Purchase_Order
-	err := rs.Tx().Select().Model(id, &order)
-	// err := rs.Tx().Select().From("purchase_order").Where(dbx.HashExp{"cust_id": id}).All(&order)
 	return &order, err
 }
 
@@ -64,6 +56,13 @@ func (dao *OrderDAO) Count(rs app.RequestScope) (int, error) {
 func (dao *OrderDAO) Query(rs app.RequestScope, offset, limit int) ([]models.Purchase_Order, error) {
 	order := []models.Purchase_Order{}
 	err := rs.Tx().Select().OrderBy("purchase_order_id").Offset(int64(offset)).Limit(int64(limit)).All(&order)
+	return order, err
+}
+
+// Get reads the order with the specified ID from the database.
+func (dao *OrderDAO) GetCustomerCart(rs app.RequestScope, id int) ([]models.Purchase_Order, error) {
+	order := []models.Purchase_Order{}
+	err := rs.Tx().Select().Where(dbx.HashExp{"cust_id": id, "dispatched": false}).All(&order)
 	return order, err
 }
 

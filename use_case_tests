@@ -12,6 +12,3 @@ Given a logged in customer with ID = 1
 3. Check total price of items in the cart taking promotions into account
 	- Get all orders with customer = 1 and that are not dispatched
 	- Join tables with promotion to calculate the price '/api/orders'
-
-todo :
-- stuck on bug with order dao not recognising getByCustomerId....
