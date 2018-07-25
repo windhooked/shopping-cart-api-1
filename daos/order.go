@@ -4,6 +4,7 @@ import (
 	"github.com/go-ozzo/ozzo-dbx"
 	"../app"
 	"../models"
+	"strconv"
 )
 
 // OrderDAO persists data in database
@@ -15,9 +16,18 @@ func NewOrderDAO() *OrderDAO {
 
 // Get reads the order with the specified ID from the database.
 func (dao *OrderDAO) Get(rs app.RequestScope, id int) (*models.Purchase_Order, error) {
-	var order models.Purchase_Order
-	err := rs.Tx().Select().Model(id, &order)
-	return &order, err
+	// Check if order is cached in Redis otherwise use query to the DB
+    cachedOrder, err := models.FindOrder(strconv.Itoa(id))
+    if err == models.ErrNoOrder {
+		var order models.Purchase_Order
+		err := rs.Tx().Select().Model(id, &order)
+		models.CacheOrder(&order)
+		return &order, err
+    } else if err != nil {
+        return nil, err
+    } else {
+    	return cachedOrder, err
+    }	
 }
 
 // Create saves a new order record in the database.

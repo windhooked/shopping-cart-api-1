@@ -3,6 +3,7 @@ package daos
 import (
 	"../app"
 	"../models"
+	"strconv"
 )
 
 // CustomerDAO persists data in database
@@ -14,9 +15,18 @@ func NewCustomerDAO() *CustomerDAO {
 
 // Get reads the customer with the specified ID from the database.
 func (dao *CustomerDAO) Get(rs app.RequestScope, id int) (*models.Customer, error) {
-	var customer models.Customer
-	err := rs.Tx().Select().Model(id, &customer)
-	return &customer, err
+	// Check if customer is cached in Redis otherwise use query to the DB
+    cachedCustomer, err := models.FindCustomer(strconv.Itoa(id))
+    if err == models.ErrNoCustomer {
+		var customer models.Customer
+		err := rs.Tx().Select().Model(id, &customer)
+		models.CacheCustomer(&customer)
+		return &customer, err
+    } else if err != nil {
+        return nil, err
+    } else {
+    	return cachedCustomer, err
+    }	
 }
 
 // Create saves a new customer record in the database.

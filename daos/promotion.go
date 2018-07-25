@@ -3,6 +3,7 @@ package daos
 import (
 	"../app"
 	"../models"
+	"strconv"
 )
 
 // PromotionDAO persists data in database
@@ -14,9 +15,18 @@ func NewPromotionDAO() *PromotionDAO {
 
 // Get reads the promotion with the specified ID from the database.
 func (dao *PromotionDAO) Get(rs app.RequestScope, id int) (*models.Promotion, error) {
-	var promotion models.Promotion
-	err := rs.Tx().Select().Model(id, &promotion)
-	return &promotion, err
+	// Check if order is cached in Redis otherwise use query to the DB
+    cachedPromotion, err := models.FindPromotion(strconv.Itoa(id))
+    if err == models.ErrNoPromotion {
+		var promotion models.Promotion
+		err := rs.Tx().Select().Model(id, &promotion)
+		models.CachePromotion(&promotion)
+		return &promotion, err
+    } else if err != nil {
+        return nil, err
+    } else {
+    	return cachedPromotion, err
+    }	
 }
 
 // Create saves a new promotion record in the database.

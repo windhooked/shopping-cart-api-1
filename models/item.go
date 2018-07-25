@@ -9,6 +9,7 @@ import (
     "log"
     "strconv"
 )
+
 // Declare a global db variable to store the Redis connection pool.
 var db *pool.Pool
 
@@ -45,7 +46,7 @@ func (m Item) Validate() error {
 	)
 }
 
-func populateItem(reply map[string]string) (*Item, error) {
+func PopulateItem(reply map[string]string) (*Item, error) {
     var err error
     ab := new(Item)
     ab.Item_id, err = strconv.Atoi(reply["item_id"])
@@ -88,10 +89,9 @@ func FindItem(id string) (*Item, error) {
         return nil, ErrNoItem
     }
 
-    return populateItem(reply)
+    return PopulateItem(reply)
 }
 
-// todo - implementing caching to redis
 func CacheItem(item *Item) error {
     var converted_promo_id string
     if item.Promo_id == nil {
