@@ -20,6 +20,7 @@ func (dao *ItemDAO) Get(rs app.RequestScope, id int) (*models.Item, error) {
     if err == models.ErrNoItem {
 		var item models.Item
 		err := rs.Tx().Select().Model(id, &item)
+		models.CacheItem(&item)
 		return &item, err
     } else if err != nil {
         return nil, err

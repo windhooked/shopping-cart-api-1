@@ -77,7 +77,7 @@ func populateItem(reply map[string]string) (*Item, error) {
 }
 
 func FindItem(id string) (*Item, error) {
-    // Fetch the details of a specific album. If no album is found with the
+    // Fetch the details of a specific item. If no item is found with the
     // given id, the map[string]string returned by the Map() helper method
     // will be empty. So we can simply check whether it's length is zero and
     // return an ErrNoItem message if necessary.
@@ -89,4 +89,20 @@ func FindItem(id string) (*Item, error) {
     }
 
     return populateItem(reply)
+}
+
+// todo - implementing caching to redis
+func CacheItem(item *Item) error {
+    var converted_promo_id string
+    if item.Promo_id == nil {
+        converted_promo_id = ""
+    } else {
+        converted_promo_id = strconv.Itoa(*item.Promo_id)
+    }
+    resp := db.Cmd("HMSET", "item_id:" + strconv.Itoa(item.Item_id), "item_id", strconv.Itoa(item.Item_id), "promo_id", converted_promo_id, "name", item.Name, "stock", strconv.Itoa(item.Stock), "price", strconv.Itoa(item.Price))
+    if resp.Err != nil {
+        log.Fatal(resp.Err)
+        return resp.Err
+    }
+    return nil
 }

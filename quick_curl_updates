@@ -14,4 +14,4 @@ curl -X "DELETE" http://localhost:8080/api/promotions/3
 
 Testing Redis
 Manually storing object in cache - HMSET item_id:1 item_id 1 promo_id 1 name "Belts" stock 10 price 20
-curl -i localhost:8080/api/item/1
+curl -i localhost:8080/api/item/1 - doesn't show response time, check by reading server logs in terminal

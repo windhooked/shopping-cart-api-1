@@ -15,3 +15,6 @@ To hypothetically scale this system to a million users and such, need to:
 	# Hardware Optimisation
 	- Upgrading a server's RAM and space will improve the space and time load that it can handle
 	- Adding multiple machines and using them as a distributed system for the backend greatly improves the availability of the entire system by balancing loads through idle processes/machines
+
+	# External Optimisation
+	- Using redis/memcache to act as a light database on a local port to cache objects from DB in memory. The  amount of memory available to cache is likely the available memory in your system or RAM. With abundance of server space, we can increase the performance of our backend by utilising as much data in redis as possible.
