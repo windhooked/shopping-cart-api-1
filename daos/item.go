@@ -3,6 +3,7 @@ package daos
 import (
 	"../app"
 	"../models"
+	"strconv"
 )
 
 // ItemDAO persists data in database
@@ -14,9 +15,17 @@ func NewItemDAO() *ItemDAO {
 
 // Get reads the item with the specified ID from the database.
 func (dao *ItemDAO) Get(rs app.RequestScope, id int) (*models.Item, error) {
-	var item models.Item
-	err := rs.Tx().Select().Model(id, &item)
-	return &item, err
+	// Check if item is cached in Redis otherwise use query to the DB
+    cachedItem, err := models.FindItem(strconv.Itoa(id))
+    if err == models.ErrNoItem {
+		var item models.Item
+		err := rs.Tx().Select().Model(id, &item)
+		return &item, err
+    } else if err != nil {
+        return nil, err
+    } else {
+    	return cachedItem, err
+    }
 }
 
 // Create saves a new item record in the database.

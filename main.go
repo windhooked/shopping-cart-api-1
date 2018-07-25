@@ -4,6 +4,7 @@ import (
     "fmt"
     "net/http"
 
+    // "github.com/mediocregopher/radix.v2/redis"
     "github.com/Sirupsen/logrus"
     "github.com/go-ozzo/ozzo-dbx"
     "github.com/go-ozzo/ozzo-routing"
