@@ -57,4 +57,3 @@ func (dao *PromotionDAO) Query(rs app.RequestScope, offset, limit int) ([]models
 	err := rs.Tx().Select().OrderBy("promo_id").Offset(int64(offset)).Limit(int64(limit)).All(&promotion)
 	return promotion, err
 }
-

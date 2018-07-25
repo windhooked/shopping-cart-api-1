@@ -66,6 +66,26 @@ func (dao *OrderDAO) GetCustomerCart(rs app.RequestScope, id int) ([]models.Purc
 	return order, err
 }
 
+// Get reads all orders with the specified cust_ID from the database.
+func (dao *OrderDAO) GetCustomerCartPrice(rs app.RequestScope, id int) int {
+	type OrderPrice struct {
+		Item_id int
+		Quantity int
+		Price int
+		Dispatched bool
+	}
+
+	var orderPrices []OrderPrice
+	err := rs.Tx().NewQuery("select i.item_id, po.quantity, case when p.required_item_id IS NOT NULL then i.price * (1 - (p.discount_percentage::float / 100)) else i.price end as price, p.required_item_id, p.discount_percentage, p.required_quantity, po.dispatched from purchase_order as po left join item as i on po.item_id = i.item_id left join promotion as p on i.promo_id = p.promo_id where cust_id = 1 and dispatched = false")
+	err.All(&orderPrices)	
+
+	totalPrice := 0
+	for i := 0; i < len(orderPrices); i++ {
+		totalPrice += (orderPrices[i].Quantity * orderPrices[i].Price)
+	}
+
+	return totalPrice
+}
 // Get reads all orders with the specified cust_ID from the database that are dispatched or purchased.
 func (dao *OrderDAO) GetCustomerCompletedOrders(rs app.RequestScope, id int) ([]models.Purchase_Order, error) {
 	order := []models.Purchase_Order{}

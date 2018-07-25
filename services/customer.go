@@ -24,26 +24,14 @@ type customerDAO interface {
 
 // customerOrderDAO specifies the interface of the order DAO needed by OrderService.
 type customerOrderDAO interface {
-	// Get returns the order with the specified customer ID.
 	GetCustomerCart(rs app.RequestScope, id int) ([]models.Purchase_Order, error)
-
+	GetCustomerCartPrice(rs app.RequestScope, id int) (int)
 	GetCustomerCompletedOrders(rs app.RequestScope, id int) ([]models.Purchase_Order, error)
 }
 
-// // promotionDAO specifies the interface of the promotion DAO needed by PromotionService.
+// promotionDAO specifies the interface of the promotion DAO needed by PromotionService.
 // type promotionDAO interface {
-// 	// Get returns the promotion with the specified promotion ID.
 // 	Get(rs app.RequestScope, id int) (*models.Promotion, error)
-// 	// Count returns the number of promotions.
-// 	Count(rs app.RequestScope) (int, error)
-// 	// Query returns the list of promotions with the given offset and limit.
-// 	Query(rs app.RequestScope, offset, limit int) ([]models.Promotion, error)
-// 	// Create saves a new promotion in the storage.
-// 	Create(rs app.RequestScope, promotion *models.Promotion) error
-// 	// Update updates the promotion with given ID in the storage.
-// 	Update(rs app.RequestScope, id int, promotion *models.Promotion) error
-// 	// Delete removes the promotion with given ID from the storage.
-// 	Delete(rs app.RequestScope, id int) error
 // }
 
 // CustomerService provides services related with customers.
@@ -114,6 +102,12 @@ func (s *CustomerService) GetCart(rs app.RequestScope, id int) ([]models.Purchas
 	}
 
 	return orders, err
+}
+
+// Returns the current shopping cart price for the customer with the specified cust ID
+func (s *CustomerService) GetCartPrice(rs app.RequestScope, id int) (int) {
+	cartPrice := s.order_dao.GetCustomerCartPrice(rs, id)
+	return cartPrice
 }
 
 func (s *CustomerService) GetOrderTransactions(rs app.RequestScope, id int) ([]models.Purchase_Order, error) {

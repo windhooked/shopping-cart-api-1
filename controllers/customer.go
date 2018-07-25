@@ -19,6 +19,7 @@ type (
 		Delete(rs app.RequestScope, id int) (*models.Customer, error)
 		
 		GetCart(rs app.RequestScope, id int) ([]models.Purchase_Order, error)
+		GetCartPrice(rs app.RequestScope, id int) (int)
 		GetOrderTransactions(rs app.RequestScope, id int) ([]models.Purchase_Order, error)
 	}
 
@@ -37,6 +38,7 @@ func ServeCustomerResource(rg *routing.RouteGroup, service customerService) {
 	rg.Delete("/customers/<id>", r.delete)
 
 	rg.Get("/customers/<id>/cart", r.getCart)
+	rg.Get("/customers/<id>/cart/price", r.getCartPrice)
 	rg.Get("/customers/<id>/transactions", r.getOrderTransactions)
 }
 
@@ -133,6 +135,19 @@ func (r *customerResource) getCart(c * routing.Context) error {
 
 	return c.Write(response)
 }
+
+func (r *customerResource) getCartPrice(c * routing.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	response := r.service.GetCartPrice(app.GetRequestScope(c), id)
+	if err != nil {
+		return err
+	}
+
+	return c.Write(response)
+} 
 
 func (r *customerResource) getOrderTransactions(c * routing.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
