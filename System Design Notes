@@ -15,12 +15,3 @@ To hypothetically scale this system to a million users and such, need to:
 	# Hardware Optimisation
 	- Upgrading a server's RAM and space will improve the space and time load that it can handle
 	- Adding multiple machines and using them as a distributed system for the backend greatly improves the availability of the entire system by balancing loads through idle processes/machines
-
-curl -X POST -H "Content-Type: application/json" -d '{"cust_id": 1, "item_id": 1, "quantity": 1}' http://localhost:8080/api/orders
-
-curl -X "DELETE" http://localhost:8080/api/orders/1
-
-
-curl -X POST -H "Content-Type: application/json" -d '{"required_item_id": 3, "required_quantity": 5, "discount_percentage": 75}' http://localhost:8080/api/promotions
-
-curl -X "DELETE" http://localhost:8080/api/promotions/3

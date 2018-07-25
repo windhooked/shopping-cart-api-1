@@ -1,0 +1,13 @@
+Example templates to copy paste into terminal - change raw body data as you wish
+
+Add new order
+curl -X POST -H "Content-Type: application/json" -d '{"cust_id": 1, "item_id": 1, "quantity": 1}' http://localhost:8080/api/orders
+
+Delete a order
+curl -X "DELETE" http://localhost:8080/api/orders/1
+
+Add new promotion
+curl -X POST -H "Content-Type: application/json" -d '{"required_item_id": 3, "required_quantity": 5, "discount_percentage": 75}' http://localhost:8080/api/promotions
+
+Delete a promotion
+curl -X "DELETE" http://localhost:8080/api/promotions/3
